@@ -15,7 +15,8 @@
 //------------------------------------------------------------------------------
 
 var Botkit = require('botkit');
-require('dotenv').load();
+//require('dotenv').load();
+require('dotenv').config({silent: true})
 var sharedCode = require('./watson.js')();
 
 var middleware = require('botkit-middleware-watson')({
@@ -37,7 +38,7 @@ var controller = Botkit.facebookbot({
 var bot = controller.spawn({
 });
 
-controller.setupWebserver(process.env.port || 3000, function(err, webserver) {
+controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
     controller.createWebhookEndpoints(webserver, bot, function() {
     });
 });

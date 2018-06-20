@@ -2,7 +2,7 @@
   "name": "NOVA-FBMessenger",
   "version": "0.0.1",
   "description": "FBMessenger vs Watson assistant app.",
-  "main": "simple-bot-slack.js",
+  "main": "watson-facebook.js",
   "scripts": {
     "start": "node watson-facebook.js"
   },

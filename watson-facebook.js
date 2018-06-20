@@ -16,13 +16,13 @@
 
 var Botkit = require('botkit');
 require('dotenv').load();
-var sharedCode = require('./handleWatsonResponse.js')();
+var sharedCode = require('./watson.js')();
 
 var middleware = require('botkit-middleware-watson')({
-    username: process.env.CONVERSATION_USERNAME,
-    password: process.env.CONVERSATION_PASSWORD,
+    username: process.env.ASSISTANT_USERNAME,
+    password: process.env.ASSISTANT_PASSWORD,
     workspace_id: process.env.WORKSPACE_ID,
-    version_date: '2016-09-20'
+    version_date: '2017-05-26'
 });
 
 var controller = Botkit.facebookbot({
@@ -45,13 +45,42 @@ controller.setupWebserver(process.env.port || 3000, function(err, webserver) {
 controller.api.messenger_profile.greeting('Hello');
 controller.api.messenger_profile.get_started('Hello');
 
-controller.on('message_received', function (bot, message) {
-    middleware.interpret(bot, message, function (err) {
-        if (!err) {
-            sharedCode.handleWatsonResponse(bot, message, 'facebook');
-        }
-        else {            
-            bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
-        }
-    });
-});
+var processWatsonResponse = function(bot, message) {
+	if (message.watsonError) {
+		return bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+	}
+	
+	//middleware.sendToWatsonAsync(bot, message, {lat: 48, lng:10});
+	if (message.attachments) {
+		message = analyzeMessageAttachment(bot, message);
+	}
+	middleware.interpret(bot, message, function (err) {
+		if (!err) {
+			sharedCode.handleWatsonResponse(bot, message, 'facebook');
+		}
+		else {            
+			bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+		}
+	});
+}
+
+function analyzeMessageAttachment(bot, message) {
+	var attachments = message.attachments;
+	attachments.forEach( function( oData ) {
+		var sType = oData.type;
+		switch (sType) {
+			case 'location': 
+				// Extract latitude and longitude and set them in feedback message
+				message.text = 'coordinates:' + oData.payload.coordinates.lat + ',' + oData.payload.coordinates.long;
+				return message;
+			break;
+			default:
+			break;
+		}
+	});
+	return message;
+}
+
+controller.on('message_received', processWatsonResponse);
+controller.on('facebook_postback', processWatsonResponse);
+

@@ -34,7 +34,6 @@ var geocoder = NodeGeocoder(options);
 module.exports = function () {
     return {
         "handleWatsonResponse": function (bot, message, clientType) {
-			console.log(message);
             let customSlackMessage = false;
             let customFacebookMessage = false;
             let actionToBeInvoked = false;
@@ -216,7 +215,6 @@ function lookupParcel(watsonDataOutput, bot, message) {
 					}
 					else if(response.data.total == 1) {
 						var result = jsonData[0];
-		console.log(result._source.attributes.deliveryAddress);
 						replyWithGenericTemplate(bot, message, result);
 					}
 					else {

@@ -148,7 +148,7 @@ function invokeAction(watsonDataOutput, bot, message) {
 			break;
 			
 		case 'search_promo':
-			answer = "Action requested " + actionName;
+			//answer = "Action requested " + actionName;
 			bot.replyWithTyping(message, answer);
 			break;
 		

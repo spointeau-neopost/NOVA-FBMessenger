@@ -346,7 +346,7 @@ function lookupParcelLocker(watsonDataOutput, bot, message) {
 
 function buildParcelLockerListElement(oLocker) {
 	var oElement = {
-		'title': oLocker.name + ' (' + oLocker.distance + ')',
+		'title': oLocker.name + ' (' + oLocker.distance + 'm.)',
 		'subtitle': oLocker.address2 + ', ' + oLocker.zip + ' ' + oLocker.city,
 		'buttons': [{
 			'title': 'View',

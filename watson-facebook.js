@@ -43,8 +43,8 @@ controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
     });
 });
 
-controller.api.messenger_profile.greeting('Hello');
-controller.api.messenger_profile.get_started('Hello');
+controller.api.messenger_profile.greeting('Hello {{user_first_name}}! I am Neopost Shipping virtual assistant, here to help you with your order delivery matters.');
+controller.api.messenger_profile.get_started('');
 
 var processWatsonResponse = function(bot, message) {
 	if (message.watsonError) {

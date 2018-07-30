@@ -198,14 +198,18 @@ function lookupParcel(watsonDataOutput, bot, message) {
 			bot.replyWithTyping(message, answer);
 		} else {
 			var parameters = watsonDataOutput.action.parameters;
-			axios.defaults.headers.common['x-access-token'] = response.token;
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.token;
 			axios.get( url, {
-				params: {
+				/*params: {
 					"q": "*",
 					"filters": true,
 					"match_attributes.shipmentReference": parameters.tracking_number,
 					"match_attributes.deliveryAddress.contact.email": parameters.user_email
-				}
+				}*/
+        params: {
+          "attributes.shipmentReference": parameters.tracking_number,
+          "attributes.deliveryAddress.contact.email": parameters.user_email
+        }
 			})
 			.then(function(response) {
 				if(response.data.code == 200) {
